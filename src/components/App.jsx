@@ -9,6 +9,7 @@ export default class App extends React.Component {
         super(props)
         this.state = {
             movies: moviesData,
+            moviesWillWatch: []
 
         }
         //если у нас  removeMovies (movie) {} то используем
@@ -23,18 +24,41 @@ export default class App extends React.Component {
         )
         this.setState({
             movies: updateMovies
-        });
+        })
+    }
+
+    addMovieToWillWatch = (movie) => {
+        // console.log(movie)
+        const updateMoviesWillWatch = [...this.state.moviesWillWatch, movie];
+        //ES6
+        // updateMoviesWillWatch.push(movie)
+        this.setState({
+            moviesWillWatch: updateMoviesWillWatch
+        })
     }
 
     render() {
-        return (<div>
-            {this.state.movies.map(movie => {
-                return <MovieItem
-                    key={movie.id}
-                    movie={movie}
-                    removeMovies={this.removeMovies}
-                />
-            })}
+        return (<div className='container'>
+            <div className="row">
+                <div className="col-9">
+                    <div className="row">
+                        {this.state.movies.map(movie => {
+                            return (<div className='col-6 mb-4' key={movie.id}>
+                                <MovieItem
+                                    movie={movie}
+                                    removeMovies={this.removeMovies}
+                                    addMovieToWillWatch={this.addMovieToWillWatch}
+                                />
+                            </div>)
+                        })}
+                    </div>
+                </div>
+                <div className="col-3">
+
+                    <p> Will watch: {this.state.moviesWillWatch.length}</p>
+                </div>
+            </div>
+
         </div>)
     }
 
