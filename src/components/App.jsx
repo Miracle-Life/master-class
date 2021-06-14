@@ -26,6 +26,16 @@ export default class App extends React.Component {
             movies: updateMovies
         })
     }
+    removeMoviesFromWillWatch = (movie) => {
+        const updateMoviesWillWatch = this.state.moviesWillWatch.filter((item) => {
+                return item.id !== movie.id
+            }
+        )
+        this.setState({
+            moviesWillWatch: updateMoviesWillWatch
+        })
+    }
+
 
     addMovieToWillWatch = (movie) => {
         // console.log(movie)
@@ -47,6 +57,7 @@ export default class App extends React.Component {
                                 <MovieItem
                                     movie={movie}
                                     removeMovies={this.removeMovies}
+                                    removeMoviesFromWillWatch={this.removeMoviesFromWillWatch}
                                     addMovieToWillWatch={this.addMovieToWillWatch}
                                 />
                             </div>)
