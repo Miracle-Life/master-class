@@ -1,6 +1,7 @@
 import React from "react";
-import {moviesData} from "../moviesData"
+// import {moviesData} from "../moviesData"
 import MovieItem from "./MovieItem";
+import {API_KEY_3, API_URL} from "../utils/api";
 
 
 
@@ -8,20 +9,41 @@ export default class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            movies: moviesData,
+            movies: [],
             moviesWillWatch: []
 
         }
         //если у нас  removeMovies (movie) {} то используем
         // this.removeMovies=this.removeMovies.bind(this);
         //но мы применяем стрелочную функцию
+
+        console.log('constructor')
+
+    }
+
+    componentDidMount(promise) {
+        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&sort_by=popularity.desc`
+        fetch(link)
+            .then(r => r.json())
+            .then((data) => {
+                console.log(data)
+                this.setState({
+                    movies: data.results
+                })
+            })
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('didUpdate');
     }
 
     removeMovies = (movie) => {
-        const updateMovies = this.state.movies.filter((item) => {
-                return item.id !== movie.id
-            }
-        )
+        // const updateMovies = this.state.movies.filter((item) => {
+        //         return item.id !== movie.id
+        //     }
+        // )
+        //аналогичное примеру выше
+        const updateMovies = this.state.movies.filter(item => item.id !== movie.id)
         this.setState({
             movies: updateMovies
         })
@@ -48,6 +70,7 @@ export default class App extends React.Component {
     }
 
     render() {
+        console.log('render')
         return (<div className='container'>
             <div className="row">
                 <div className="col-9">
@@ -65,8 +88,17 @@ export default class App extends React.Component {
                     </div>
                 </div>
                 <div className="col-3">
-
-                    <p> Will watch: {this.state.moviesWillWatch.length}</p>
+                    <h4>Will Watch: {this.state.moviesWillWatch.length} movies</h4>
+                    <ul className="list-group">
+                        {this.state.moviesWillWatch.map(movie => (
+                            <li key={movie.id} className="list-group-item">
+                                <div className="d-flex justify-content-between">
+                                    <p>{movie.title}</p>
+                                    <p>{movie.vote_average}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
 
