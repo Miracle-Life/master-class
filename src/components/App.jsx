@@ -1,7 +1,7 @@
 import React from "react";
-// import {moviesData} from "../moviesData"
 import MovieItem from "./MovieItem";
 import {API_KEY_3, API_URL} from "../utils/api";
+import MoviesTabs from "./MoviesTabs";
 
 
 
@@ -10,7 +10,8 @@ export default class App extends React.Component {
         super(props)
         this.state = {
             movies: [],
-            moviesWillWatch: []
+            moviesWillWatch: [],
+            sort_by: 'popularity.desc'
 
         }
         //если у нас  removeMovies (movie) {} то используем
@@ -22,7 +23,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount(promise) {
-        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&sort_by=popularity.desc`
+        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&sort_by=${this.state.sort_by}`
         fetch(link)
             .then(r => r.json())
             .then((data) => {
@@ -69,12 +70,27 @@ export default class App extends React.Component {
         })
     }
 
+    updateSortBy = value => {
+        this.setState({
+            sort_by: value
+        })
+    }
+
     render() {
         console.log('render')
         return (<div className='container'>
             <div className="row">
                 <div className="col-9">
-                    <div className="row">
+                    <div className="row mb-4">
+                        <div className="row">
+                            <div className="col-12">
+                                <MoviesTabs
+                                    sort_by={this.state.sort_by}
+                                    updateSortBy={this.updateSortBy}
+                                />
+                            </div>
+                        </div>
+
                         {this.state.movies.map(movie => {
                             return (<div className='col-6 mb-4' key={movie.id}>
                                 <MovieItem
